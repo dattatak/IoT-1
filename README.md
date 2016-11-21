@@ -1,9 +1,9 @@
 # IoT
 IoT Robot Project
 
-Run server.py on the machine running apache (python server.py)
+Run server.py on the machine running the Apache server
 
-Run robot.py on the robot (python robot.py 127.0.0.1)
+Run robot.py on the robot with the server's IP as a command line argument
 
 Password for viewer: viewer
 
