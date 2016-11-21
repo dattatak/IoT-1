@@ -47,28 +47,28 @@ var light = document.getElementById("light");
 
 document.addEventListener('keydown', function(e) {
 	e = e || window.event;
-    if (e.keyCode == '38') { // up arrow
-    	input.A = 1;
-    } else if (e.keyCode == '40') { // down arrow
-        input.B = 1;
-    } else if (e.keyCode == '37') { // left arrow
-       	input.L = 1;
-    } else if (e.keyCode == '39') { // right arrow
-       	input.R = 1;
-    }
+    	if (e.keyCode == '38') { // up arrow
+    		input.A = 1;
+    	} else if (e.keyCode == '40') { // down arrow
+        	input.B = 1;
+    	} else if (e.keyCode == '37') { // left arrow
+       		input.L = 1;
+    	} else if (e.keyCode == '39') { // right arrow
+       		input.R = 1;
+    	}
 });
 
 document.addEventListener('keyup', function(e) {
 	e = e || window.event;
-    if (e.keyCode == '38') { // up arrow
-    	input.A = 0;
-    } else if (e.keyCode == '40') { // down arrow
-        input.B = 0;
-    } else if (e.keyCode == '37') { // left arrow
-       	input.L = 0;
-    } else if (e.keyCode == '39') { // right arrow
-       	input.R = 0;
-    }
+    	if (e.keyCode == '38') { // up arrow
+    		input.A = 0;
+    	} else if (e.keyCode == '40') { // down arrow
+        	input.B = 0;
+    	} else if (e.keyCode == '37') { // left arrow
+       		input.L = 0;
+    	} else if (e.keyCode == '39') { // right arrow
+       		input.R = 0;
+    	}
 });
 
 socket = new WebSocket("ws://<?= $_SERVER['SERVER_ADDR'] ?>:9000");
@@ -83,15 +83,16 @@ socket.onopen = function() {
 socket.onmessage = function(e) {
    	if (typeof e.data == "string") {
    		if (accepted) {
-      		display(e.data);
-      	} else if (e.data == "ACK") {
+      			display(e.data);
+      		} else if (e.data == "ACK") {
 			accepted = true;
 			setInterval(drive, 100);
 			console.log("Accepted!");
-      	} else if (e.data == "DIE") {
+      		} else if (e.data == "DIE") {
 			console.log("Rejected");
 			this.close();
-      	}
+			logoutForm.submit();
+      		}	
    	}
 };
 
@@ -118,9 +119,9 @@ function drive()
 	command = JSON.stringify(command);
 
    	if (isopen && command != prevCommand) {
-    	socket.send(command);
-    	prevCommand = command;
-    	console.log("Command Sent: "+command);             
+    		socket.send(command);
+    		prevCommand = command;
+    		console.log("Command Sent: "+command);             
    	}
 }
 
