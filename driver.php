@@ -11,39 +11,57 @@ if (!$controller) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>Robot Driver</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+<div id='menu', class="wrapper">
+	<button id='closeBtn'>Close</button>
+</div>
 <div class="wrapper">
-	<!-- options here -->
 	<form id="logout" action="index.php" method="post">
 		<input type="submit" name="logout" value="Logout" />
 	</form>
+  	<button id='menuBtn'>Menu</button>
 	<canvas id='stream'></canvas>
 	<section id='readings'>
-		<p>Temperature: <span id='temperature'></span></p>
-		<p>Light: <span id='light'></span></p>
+		<p class='temperature'>Temperature: <span id='temperature'></span></p>
+		<p class='light'>Light: <span id='light'></span></p>
 	</section>
-	<!-- <section id='controls'>
-		<button id="left">&larr;</button>
-		<button id="right">&rarr;</button>
-		<button id="accel">A</button>
-		<button id="brake">B</button>
-	</section> -->
+  	<canvas id='graph' width='1080px' height='270px'></canvas>
 </div>
 <script type="text/javascript">
+const GRAPH_POINTS = 10;
+const L_MIN = 0;
+const L_MAX = 1;
+const T_MIN = 0;
+const T_MAX = 1;
+
 var socket = null;
 var isopen = false;
 var accepted = false;
 var input = {A:0, B:0, L:0, R:0};
 var prevCommand = JSON.stringify([0,0]);
 
+var lReadings = [];
+var tReadings = [];
+
 var logoutForm = document.getElementById("logout");
 var temperature = document.getElementById("temperature");
 var light = document.getElementById("light");
-// var leftBtn = document.getElementById("left");
-// var rightBtn = document.getElementById("right");
-// var accelBtn = document.getElementById("accel");
-// var brakeBtn = document.getElementById("brake");
+var graphCanvas = document.getElementById("graph");
+var menu = document.getElementById("menu");
+var menuBtn = document.getElementById("menuBtn");
+var closeBtn = document.getElementById("closeBtn");
+
+menuBtn.addEventListener('click', function() {
+	menu.className = "wrapper open"
+});
+closeBtn.addEventListener('click', function() {
+	menu.className = "wrapper"
+});
+
+
+var graphCtx = graphCanvas.getContext("2d");
 
 document.addEventListener('keydown', function(e) {
 	e = e || window.event;
@@ -128,9 +146,38 @@ function drive()
 function display(data)
 {
 	var readings = JSON.parse(data);
-	temperature.innerHTML = readings.t;
-	light.innerHTML = readings.l;
+	temperature.innerHTML = Number(readings.t).toPrecision(6);
+	light.innerHTML = Number(readings.l).toPrecision(6);
+
+	tReadings.push(readings.t);
+	lReadings.push(readings.l);
+	if (tReadings.length > GRAPH_POINTS+1)
+		tReadings.shift();
+	if (lReadings.length > GRAPH_POINTS+1)
+		lReadings.shift();
+  
+	graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+	drawGraph(graphCtx, graphCanvas.width, graphCanvas.height, tReadings, '#C01232', T_MIN, T_MAX);
+	drawGraph(graphCtx, graphCanvas.width, graphCanvas.height, lReadings, '#0B6287', L_MIN, L_MAX);
+}
+
+function drawGraph(ctx, width, height, points, color, min, max)
+{
+	ctx.beginPath();
+	ctx.strokeStyle = color;
+	ctx.lineWidth = 10;
+	ctx.lineJoin = 'round';
+	for (let i = 0; i < points.length; i++) {
+		let x = i*width/GRAPH_POINTS;
+		let y = height - (height*points[i]/max);
+		if (i == 0)
+			ctx.moveTo(x,y);
+		else
+			ctx.lineTo(x,y);
+		ctx.stroke();
+	}
 }
 </script>
 </body>
 </html>
+

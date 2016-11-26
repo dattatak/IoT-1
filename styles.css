@@ -1,0 +1,103 @@
+body {margin: 0; padding: 0;}
+button, input {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+}
+.wrapper {
+  background: #b0aba0;
+  width: 900px;
+  margin: 0;
+  padding: 10px;
+}
+#menu {
+	height: 500px;
+	top: -100%;
+	background: #888;
+	border-radius: 0 0 30px 30px;
+	position: absolute;
+	-webkit-box-shadow: 0px 23px 16px -13px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 23px 16px -13px rgba(0,0,0,0.75);
+	box-shadow: 0px 23px 16px -13px rgba(0,0,0,0.75);
+	-webkit-transition: top 0.5s; /* Safari */
+    transition: top 0.5s;
+}
+#menu.open {
+	top: 0;
+}
+input[name="logout"], #closeBtn {
+  float: left;
+  display: block;
+  background: #d92b4b;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 0 0 10px 0;
+  color: #fff;
+  font-family: Verdana, Geneva, sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+}
+input[name="logout"]:focus, #closeBtn:focus {
+  outline: 0;
+}
+input[name="logout"]:hover, #closeBtn:hover {
+  background: #F34565;
+}
+input[name="logout"]:active, #closeBtn:active {
+  background: #C01232;
+}
+#closeBtn {
+	float: right;
+}
+#menuBtn {
+  float: right;
+  display: block;
+  background: #247ba0;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 0 0 10px 0;
+  color: #fff;
+  font-family: Verdana, Geneva, sans-serif;
+  font-weight: bold;
+  font-size: 30px;
+}
+#menuBtn:focus {
+  outline: 0;
+}
+#menuBtn:hover {
+  background: #3E95BA;
+}
+#menuBtn:active {
+  background: #0B6287;
+}
+#stream {
+  display: block;
+  background: #605f5e;
+  margin: 10px 0;
+  width: 100%;
+}
+#graph {
+  display: block;
+  background: #f0f0f0;
+  width: 100%;
+}
+#readings p {
+  font-family: Verdana, Geneva, sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  margin: 0 0 10px 0;
+}
+.temperature, #temperature {
+  color: #C01232;
+}
+.light, #light {
+  color: #0B6287;
+}
+@media screen and (max-width: 900px) {
+    .wrapper {
+        width: calc(100% - 20px);
+    }
+}

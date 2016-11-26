@@ -1,9 +1,21 @@
 # This script will run on the Raspberry Pi
-
+import random
 from autobahn.twisted.websocket import WebSocketClientProtocol, \
     WebSocketClientFactory
 
-ROBOT_PASSWORD = 'robot'
+ROBOT_PASSWORD = 'robot9000'
+
+# implement this
+def controlMotor(payload):
+    print("Input received: {0}".format(payload.decode('utf8')))
+
+# implement this
+def readTemperature():
+    return str(random.random())
+
+# implement this
+def readLight():
+    return str(random.random())
 
 class RobotClientProtocol(WebSocketClientProtocol):
 
@@ -12,19 +24,20 @@ class RobotClientProtocol(WebSocketClientProtocol):
 
     def onOpen(self):
         print("WebSocket connection open.")
+        # ask the server if I can be a robot
         self.sendMessage(ROBOT_PASSWORD.encode('utf8'))
 
         def sendReadings():
-            # change this to actually read from sensors
-            self.sendMessage('{"t":"test","l":"test"}'.encode('utf8'))
+            light = readLight()
+            temperature = readTemperature()
+            self.sendMessage('{"t":"'+light+'","l":"'+temperature+'"}'.encode('utf8'))
             self.factory.reactor.callLater(1, sendReadings)
 
         # start sending readings every second ..
         sendReadings()
 
     def onMessage(self, payload, isBinary):
-        # change this to actually send instructions to motor
-        print("Text message received: {0}".format(payload.decode('utf8')))
+        controlMotor(payload)
 
     def onClose(self, wasClean, code, reason):
         print("WebSocket connection closed: {0}".format(reason))

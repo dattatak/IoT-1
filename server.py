@@ -10,7 +10,7 @@ from autobahn.twisted.websocket import WebSocketServerFactory, \
     listenWS
 
 DRIVER_PASSWORD = 'driver'
-ROBOT_PASSWORD = 'robot'
+ROBOT_PASSWORD = 'robot9000'
 
 class BroadcastServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
