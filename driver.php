@@ -36,9 +36,9 @@ if (!$controller) {
 		<p class='light'>Light: <span id='light'></span></p>
 	</section>
   	<canvas id='graph' width='1080px' height='270px'></canvas>
-	<div id="controls">
+	<canvas id="controls">
 		<div id='shadow'></div>
-	</div>
+	</canvas>
 </div>
 <script type="text/javascript">
 var GRAPH_POINTS = 10;
@@ -50,6 +50,7 @@ var T_MAX = 1;
 var socket = null;
 var isopen = false;
 var accepted = false;
+var mousedown = false;
 var input = {A:0, B:0, L:0, R:0};
 var prevCommand = JSON.stringify([0,0]);
 
@@ -63,6 +64,38 @@ var graphCanvas = document.getElementById("graph");
 var menu = document.getElementById("menu");
 var menuBtn = document.getElementById("menuBtn");
 var closeBtn = document.getElementById("closeBtn");
+var controls = document.getElementById("controls");
+
+function mousePos(e) {
+    var mouseX, mouseY;
+
+    if (e.offsetX) {
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
+    } else if (e.layerX) {
+        mouseX = e.layerX;
+        mouseY = e.layerY;
+    }
+
+	if (mouseX > 0 && mouseX <= controls.width && mouseY > 0 && mouseY <= controls.height)
+		return [mouseX, mouseY];
+	else
+		return false; 
+}
+
+document.addEventListener('mousedown', function() {
+	mousedown = true;
+	console.log(mousePos(e));
+});
+
+document.addEventListener('mouseup', function() {
+	mousedown = false;
+});
+
+document.addEventListener('mousemove', function() {
+	if (mousedown)
+		console.log(mousePos(e));
+});
 
 menuBtn.addEventListener('click', function() {
 	menu.className = "wrapper open"
