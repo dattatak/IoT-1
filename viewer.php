@@ -15,7 +15,15 @@ if (!$controller) {
 </head>
 <body>
 <div id='menu', class="wrapper">
-	<button id='closeBtn'>Close</button>
+	<button id='closeBtn'>Close</button><br>
+	<fieldset>Alert When Light Drops Below: <input type="text" id="lAlertMin" /></fieldset>
+	<fieldset>Alert When Light Exceeds: <input type="text" id="lAlertMax" /></fieldset>
+	<fieldset>Alert When Temperature Drops Below: <input type="text" id="tAlertMin" /></fieldset>
+	<fieldset>Alert When Temperature Exceeds: <input type="text" id="tAlertMax" /></fieldset>
+	<fieldset>Graph Minimum Light Value: <input type="text" id="lMin" /></fieldset>
+	<fieldset>Graph Maximum Light Value: <input type="text" id="lMax" /></fieldset>
+	<fieldset>Graph Minimum Temperature Value: <input type="text" id="tMin" /></fieldset>
+	<fieldset>Graph Maximum Temperature Value: <input type="text" id="tMax" /></fieldset>
 </div>
 <div class="wrapper">
 	<form id="logout" action="index.php" method="post">

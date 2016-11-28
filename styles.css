@@ -1,9 +1,9 @@
 body {margin: 0; padding: 0;}
-button, input {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
+* {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Chrome/Safari/Opera */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
 }
 .wrapper {
   background: #b0aba0;
@@ -12,8 +12,9 @@ button, input {
   padding: 10px;
 }
 #menu {
-	height: 500px;
+	text-align: center;
 	top: -100%;
+	/* height: 500px; */
 	background: #888;
 	border-radius: 0 0 30px 30px;
 	position: absolute;
@@ -21,7 +22,28 @@ button, input {
 	-moz-box-shadow: 0px 23px 16px -13px rgba(0,0,0,0.75);
 	box-shadow: 0px 23px 16px -13px rgba(0,0,0,0.75);
 	-webkit-transition: top 0.5s; /* Safari */
-    transition: top 0.5s;
+    	transition: top 0.5s;
+	color: #ccc;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 25px;
+	z-index: 100;
+}
+fieldset {
+	border: none;
+	display: inline-block;
+	width: 700px;
+	padding: 0;
+	margin: 0;
+}
+#menu input[type="text"] {
+	width: 50px;
+	height: 20px;
+	margin: 5px 0;
+	padding: 0 10px;
+	font-size: 15px;
+	background: #ccc;
+	border: none;
+	border-radius: 5px;	
 }
 #menu.open {
 	top: 0;
@@ -50,6 +72,7 @@ input[name="logout"]:active, #closeBtn:active {
 }
 #closeBtn {
 	float: right;
+	clear: left;
 }
 #menuBtn {
   float: right;
@@ -96,8 +119,42 @@ input[name="logout"]:active, #closeBtn:active {
 .light, #light {
   color: #0B6287;
 }
+#controls {
+	display: none;
+	margin: 10px 0;
+	left: 50%;
+	transform: translateX(-50%);
+	position: relative;
+	cursor: pointer;
+	border-radius: 50%;
+	border: 5px solid #666;
+	width: 120px; height: 120px; 
+	background: #ccc;
+}
+#controls #shadow {
+	border-radius: 50%;
+	position: absolute;
+	top: 0; left: 0;
+	width: 0px; height: 0px;
+	border-top: 60px solid transparent;
+	border-bottom: 60px solid transparent;
+	border-left: 60px solid transparent;
+	border-right: 60px solid transparent;
+}
+#controls:active #shadow {
+	border-top: 60px solid rgba(0,0,0,0.3);
+}
 @media screen and (max-width: 900px) {
-    .wrapper {
-        width: calc(100% - 20px);
-    }
+	.wrapper {
+		width: calc(100% - 20px);
+	}
+	#menu {
+		font-size: 17px;
+	}
+	fieldset {
+		width: calc(100% - 20px);
+	}
+	#controls {
+		display: block;
+	}
 }

@@ -15,7 +15,15 @@ if (!$controller) {
 </head>
 <body>
 <div id='menu', class="wrapper">
-	<button id='closeBtn'>Close</button>
+	<button id='closeBtn'>Close</button><br>
+	<fieldset>Alert When Light Drops Below: <input type="text" id="lAlertMin" /></fieldset>
+	<fieldset>Alert When Light Exceeds: <input type="text" id="lAlertMax" /></fieldset>
+	<fieldset>Alert When Temperature Drops Below: <input type="text" id="tAlertMin" /></fieldset>
+	<fieldset>Alert When Temperature Exceeds: <input type="text" id="tAlertMax" /></fieldset>
+	<fieldset>Graph Minimum Light Value: <input type="text" id="lMin" /></fieldset>
+	<fieldset>Graph Maximum Light Value: <input type="text" id="lMax" /></fieldset>
+	<fieldset>Graph Minimum Temperature Value: <input type="text" id="tMin" /></fieldset>
+	<fieldset>Graph Maximum Temperature Value: <input type="text" id="tMax" /></fieldset>
 </div>
 <div class="wrapper">
 	<form id="logout" action="index.php" method="post">
@@ -28,13 +36,16 @@ if (!$controller) {
 		<p class='light'>Light: <span id='light'></span></p>
 	</section>
   	<canvas id='graph' width='1080px' height='270px'></canvas>
+	<div id="controls">
+		<div id='shadow'></div>
+	</div>
 </div>
 <script type="text/javascript">
-const GRAPH_POINTS = 10;
-const L_MIN = 0;
-const L_MAX = 1;
-const T_MIN = 0;
-const T_MAX = 1;
+var GRAPH_POINTS = 10;
+var L_MIN = 0;
+var L_MAX = 1;
+var T_MIN = 0;
+var T_MAX = 1;
 
 var socket = null;
 var isopen = false;
