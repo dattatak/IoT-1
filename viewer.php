@@ -16,14 +16,30 @@ if (!$controller) {
 <body>
 <div id='menu', class="wrapper">
 	<button id='closeBtn'>Close</button><br>
-	<fieldset>Alert When Light Drops Below: <input type="text" id="lAlertMin" /></fieldset>
-	<fieldset>Alert When Light Exceeds: <input type="text" id="lAlertMax" /></fieldset>
-	<fieldset>Alert When Temperature Drops Below: <input type="text" id="tAlertMin" /></fieldset>
-	<fieldset>Alert When Temperature Exceeds: <input type="text" id="tAlertMax" /></fieldset>
-	<fieldset>Graph Minimum Light Value: <input type="text" id="lMin" /></fieldset>
-	<fieldset>Graph Maximum Light Value: <input type="text" id="lMax" /></fieldset>
-	<fieldset>Graph Minimum Temperature Value: <input type="text" id="tMin" /></fieldset>
-	<fieldset>Graph Maximum Temperature Value: <input type="text" id="tMax" /></fieldset>
+	<fieldset>Alert When Light Drops Below: 
+		<input type="text" id="lAlertMin" onchange="applySetting(this, alerts, 'lMin')"/>
+	</fieldset>
+	<fieldset>Alert When Light Exceeds: 
+		<input type="text" id="lAlertMax" onchange="applySetting(this, alerts, 'lMax')"/>
+	</fieldset>
+	<fieldset>Alert When Temperature Drops Below: 
+		<input type="text" id="tAlertMin" onchange="applySetting(this, alerts, 'tMin')"/>
+	</fieldset>
+	<fieldset>Alert When Temperature Exceeds: 
+		<input type="text" id="tAlertMax" onchange="applySetting(this, alerts, 'tMax')"/>
+	</fieldset>
+	<fieldset>Graph Minimum Light Value: 
+		<input type="text" id="lMin" onchange="applySetting(this, graphLimits, 'lMin')"/>
+	</fieldset>
+	<fieldset>Graph Maximum Light Value: 
+		<input type="text" id="lMax" onchange="applySetting(this, graphLimits, 'lMax')"/>
+	</fieldset>
+	<fieldset>Graph Minimum Temperature Value: 
+		<input type="text" id="tMin" onchange="applySetting(this, graphLimits, 'tMin')"/>
+	</fieldset>
+	<fieldset>Graph Maximum Temperature Value: 
+		<input type="text" id="tMax" onchange="applySetting(this, graphLimits, 'tMax')"/>
+	</fieldset>
 </div>
 <div class="wrapper">
 	<form id="logout" action="index.php" method="post">
@@ -39,10 +55,22 @@ if (!$controller) {
 </div>
 <script type="text/javascript">
 const GRAPH_POINTS = 10;
-const L_MIN = 0;
-const L_MAX = 1;
-const T_MIN = 0;
-const T_MAX = 1;
+
+var alerts = {
+	lMin: 0,
+	lMax: 9999,
+	tMin: 0,
+	tMax: 9999
+}
+
+var graphLimits = {
+	lMin: 0,
+	lMax: 1,
+	tMin: 0,
+	tMax: 1
+}
+
+var alertLimit = 0;
 
 var socket = null;
 var isopen = false;
@@ -57,6 +85,16 @@ var graphCanvas = document.getElementById("graph");
 var menu = document.getElementById("menu");
 var menuBtn = document.getElementById("menuBtn");
 var closeBtn = document.getElementById("closeBtn");
+
+function applySetting(input, obj, setting)
+{
+	if (!isNaN(Number(input.value))) {
+		obj[setting] = Number(input.value);
+		console.log("Changed "+setting+" to "+input.value);
+	} else {
+		console.log("Invalid input");
+	}
+}
 
 menuBtn.addEventListener('click', function() {
 	menu.className = "wrapper open"
@@ -100,8 +138,30 @@ function display(data)
 		lReadings.shift();
   
 	graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
-	drawGraph(graphCtx, graphCanvas.width, graphCanvas.height, tReadings, '#C01232', T_MIN, T_MAX);
-	drawGraph(graphCtx, graphCanvas.width, graphCanvas.height, lReadings, '#0B6287', L_MIN, L_MAX);
+	drawGraph(graphCtx, graphCanvas.width, graphCanvas.height, tReadings, '#C01232', graphLimits.tMin, graphLimits.tMax);
+	drawGraph(graphCtx, graphCanvas.width, graphCanvas.height, lReadings, '#0B6287', graphLimits.lMin, graphLimits.lMax);
+	
+	// check alerts
+	if (alertLimit <= 0) {
+		if (readings.t < alerts.tMin) {
+			alert("Attention: Temperature is " + readings.t);
+			alertLimit = 10;
+		}
+		if (readings.t > alerts.tMax) {
+			alert("Attention: Temperature is " + readings.t);
+			alertLimit = 10;
+		}
+		if (readings.l < alerts.lMin) {
+			alert("Attention: Light is " + readings.l);
+			alertLimit = 10;
+		}
+		if (readings.l > alerts.lMax) {
+			alert("Attention: Light is " + readings.l);
+			alertLimit = 10;
+		}
+	} else {
+		alertLimit -= 1;
+	}
 }
 
 function drawGraph(ctx, width, height, points, color, min, max)
@@ -112,7 +172,7 @@ function drawGraph(ctx, width, height, points, color, min, max)
 	ctx.lineJoin = 'round';
 	for (let i = 0; i < points.length; i++) {
 		let x = i*width/GRAPH_POINTS;
-		let y = height - (height*points[i]/max);
+		let y = height - (height/(max - min))*(points[i] - min);
 		if (i == 0)
 			ctx.moveTo(x,y);
 		else
